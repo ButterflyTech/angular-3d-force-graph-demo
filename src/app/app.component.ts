@@ -10,18 +10,12 @@ export class AppComponent implements OnInit  {
   name = 'Angular';
 
   ngOnInit() {
-    const N = 300;
-    const gData = {
-      nodes: [...Array(N).keys()].map(i => ({ id: i })),
-      links: [...Array(N).keys()]
-        .filter(id => id)
-        .map(id => ({
-          source: id,
-          target: Math.round(Math.random() * (id-1))
-        }))
-    };
-    const Graph = ForceGraph3D()
-      (document.getElementById('3d-graph'))
-        .graphData(gData);
+    const elem = document.getElementById('3d-graph');
+    const Graph = ForceGraph3D()(elem)
+      .jsonUrl('assets/dataset/demo.json')
+      .nodeAutoColorBy('user')
+      .nodeLabel(node => `${node.user}: ${node.description}`)
+      .onNodeHover(node => elem.style.cursor = node ? 'pointer' : null)
+      .onNodeClick(node => window.open(`https://bl.ocks.org/${node.user}/${node.id}`, '_blank'));
   }
 }
